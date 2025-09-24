@@ -1,0 +1,88 @@
+
+SQL CONSTRAINTS
+------------------------------------------------------------------------
+
+Constraints are rules in a database used to maintain data quality and integrity.
+👉 Simply put, they prevent wrong or invalid data from being entered into a table.
+
+    PRIMARY KEY: Unique + NOT NULL, one per table
+    FOREIGN KEY: References another table's primary key
+    UNIQUE: No duplicate values, multiple per table
+    NOT NULL: Value mandatory, no empty allowed
+    CHECK: Custom validation rules
+    DEFAULT: Automatic value when not provided
+
+✅ Best Practices
+------------------
+    Plan First: Define constraints during table design.
+    Meaningful Names: Use descriptive names for constraints.
+    Test Thoroughly: Test possible violations against constraints.
+    Document Rules: Clearly document business rules behind constraints.
+
+⚠️ Warnings
+--------------
+    Performance Impact: Too many constraints can slow performance.
+    Existing Data: When adding constraints to existing tables, always validate existing data.
+
+1. PRIMARY KEY -->
+---------------
+    Unique + Not Null -> student_id INT PRIMARY KEY
+    Auto Increment Primary Key -> student_id INT PRIMARY KEY AUTO_INCREMENT
+    
+    Composite Primary Key (Two or More Columns) -> PRIMARY KEY (order_id, product_id)
+    → The combination of order_id and product_id must be unique.
+    
+    One Table = One Primary Key
+    A table can have only one primary key (but it can include multiple columns).
+
+2. FOREIGN KEY -->
+--------------
+    Only valid department IDs are accepted
+    Value must exist in the referenced table
+    Ensures data integrity is maintained
+
+    Parent vs Child in Foreign Keys
+    --------------------------------
+    Parent Table → The table that has the Primary Key (the original unique values).
+    Child Table → The table that has the Foreign Key (it must match a value from the parent).
+
+    FOREIGN KEY – Actions
+    ---------------------
+    ON DELETE CASCADE → If parent is deleted, child records are also deleted
+    ON DELETE SET NULL → If parent is deleted, child column becomes NULL
+    ON UPDATE CASCADE → If parent ID changes, child records update automatically
+    ON DELETE RESTRICT → Parent cannot be deleted if child records exist
+
+3. UNIQUE Constraint -->
+--------------------
+    Can be applied on multiple columns, allows NULL values
+    NULL values are allowed (but only one NULL)
+    Prevent duplicate values
+
+4. NOT NULL -->
+--------------
+    Rule → Value is mandatory for every row
+    Required Field → The column must always have a value
+    No Empty Allowed → Cannot insert NULL (missing/empty) values
+
+5. CHECK Constraint -->
+-------------------
+    The CHECK constraint allows you to put a condition (rule) on a column.
+    Prevents invalid values (negative salary, wrong age, etc.)
+
+✅ CHECK Constraint Examples
+    age >= 18 AND age <= 65 → Age must be 18–65
+    salary > 0 → Salary must be positive
+    discount >= 0 AND discount <= 100 → Discount must be 0–100%
+    email LIKE '%@%.%' → Must follow basic email format
+    category IN ('Electronics', 'Clothing', ...) → Only specific values allowed
+
+6. DEFAULT Constraint -->
+---------------------
+    The DEFAULT constraint is used to set a default value for a column if no value is provided during INSERT.
+
+✅ Benefits of DEFAULT
+    Automatically sets a value if not given
+    Reduces data entry time
+    Ensures consistent values
+    Helps avoid unwanted NULL values
