@@ -1,0 +1,53 @@
+
+1. Create Database:
+   CREATE DATABASE projectsql1;
+
+2. Use Database:
+   USE projectsql1;
+
+3. Create Table:
+      CREATE TABLE products ( 
+      product_id INT, product_name VARCHAR(100), 
+      price DECIMAL(10,2), quantity INT, 
+      description TEXT );
+
+4. Insert Data:
+      INSERT INTO products VALUES 
+      ( 1, 'laptop', 75000.00, 2, 'i7 foldable laptop'),
+      ( 2, 'mobile', 150000.00, 5, 'iphone 16 pro'),
+      ( 3, 'airpods', 20000, 10, 'Apple airpods');
+
+5. Select Data:
+       SELECT * FROM products;
+
+6. Update Data:
+       UPDATE products SET description = 'iphone 17 pro', quantity = 30 WHERE product_id = 2;
+
+7. Delete Data:
+       DELETE FROM products WHERE product_id = 3;
+  
+8. Truncate Table:
+       TRUNCATE TABLE products;
+
+9. Drop Table:
+        DROP TABLE products;
+
+        Drop table if exists Employees;
+        CREATE TABLE Employees (
+        EmployeeID INT PRIMARY KEY,
+        FirstName VARCHAR(50),
+        LastName VARCHAR(50)
+        );       
+
+10. Alter Table:
+--- ADD, DROP and RENAME
+        ALTER TABLE students add dept varchar(20);
+        ALTER TABLE students drop column dept;
+        ALTER TABLE students rename column name to student_name;
+
+        ALTER TABLE students add dob date;
+--- CHANGE DATATYPE
+        ALTER TABLE students modify column dob year;
+
+DESC students;
+
