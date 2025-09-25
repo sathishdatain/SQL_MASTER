@@ -1,0 +1,95 @@
+Types of CREATE TABLE
+
+-- 1) Basic create
+
+CREATE TABLE employees (
+    employee_id INT PRIMARY KEY,
+    first_name  VARCHAR(50) NOT NULL,
+    last_name   VARCHAR(50) NOT NULL,
+    hire_date   DATE        NOT NULL,
+    salary      DECIMAL(10,2)
+);
+
+-- 2) CREATE TABLE with Constraints
+-- Table with comprehensive constraints 
+
+CREATE TABLE employees ( 
+		employee_id INT AUTO_INCREMENT PRIMARY KEY, 
+		first_name VARCHAR(50) NOT NULL, 
+		last_name VARCHAR(50) NOT NULL, 
+		email VARCHAR(100) UNIQUE NOT NULL, 
+		phone VARCHAR(15), 
+		salary DECIMAL(10,2) CHECK (salary > 0), 
+		department_id INT, 
+		hire_date DATE DEFAULT (CURDATE()), 
+		status ENUM('Active', 'Inactive', 'Terminated') DEFAULT 'Active', 
+		-- Foreign key constraint 
+		FOREIGN KEY (department_id) REFERENCES departments(dept_id) ON DELETE SET NULL ON UPDATE CASCADE, 
+		-- Table-level constraints 
+		CONSTRAINT chk_email_format CHECK (email LIKE '%@%.%'), 
+		INDEX idx_lastname (last_name), INDEX idx_department (department_id) 
+); 
+
+-- Create departments table first (for foreign key reference) 
+
+CREATE TABLE departments ( 
+		dept_id INT AUTO_INCREMENT PRIMARY KEY, 
+		dept_name VARCHAR(50) UNIQUE NOT NULL, 
+		manager_id INT, 
+		budget DECIMAL(12,2) DEFAULT 0 
+);
+
+-- 3) CREATE TABLE from Existing Table
+-- Copy table structure with data 
+
+CREATE TABLE employees_archive AS 
+SELECT * 
+FROM employees 
+WHERE hire_date < '2020-01-01'; 
+
+-- Copy specific columns with data 
+
+CREATE TABLE employee_summary AS 
+SELECT 
+  employee_id, 
+  CONCAT(first_name, ' ', last_name) AS full_name, 
+  department_id, 
+  salary 
+FROM employees 
+WHERE status = 'Active'; 
+
+-- Copy structure (no data) and modify
+CREATE TABLE temp_employees LIKE employees; 
+ALTER TABLE temp_employees ADD COLUMN temp_duration INT;
+
+-- 4) Temporary table
+CREATE TEMPORARY TABLE temp_sales ( 
+		sale_id INT AUTO_INCREMENT PRIMARY KEY, 
+		product_id INT, 
+		customer_id INT, 
+		sale_amount DECIMAL(10,2), 
+		sale_date DATE DEFAULT (CURDATE()) 
+); 
+
+-- Use temporary table 
+INSERT INTO temp_sales (product_id, customer_id, sale_amount) VALUES 
+(1, 101, 2500.00), 
+(2, 102, 1800.00); 
+
+-- Process temporary data 
+SELECT 
+	product_id, COUNT(*) as total_sales, 
+	SUM(sale_amount) as total_amount 
+FROM temp_sales 
+GROUP BY product_id; 
+
+SELECT * FROM temp_sales; -- available only in this session
+
+-- 5) Using CTE (MySQL 8.0.19+)
+WITH high_salary_cte AS (
+    SELECT employee_id, first_name, last_name, salary
+    FROM employees
+    WHERE salary > 70000
+)
+CREATE TABLE high_salary_employees_via_cte
+SELECT * FROM high_salary_cte;
