@@ -1,0 +1,93 @@
+KEYS - Candidate Key, Super Key, Composite Key, Natural Key, Surrogate Key, Minimal 
+
+Explanation
+Primary Key (student_id):
+
+Definition: The chosen candidate key that uniquely identifies each row and does not allow NULLs.
+Here, student_id is minimal and uniquely identifies each row.
+
+Candidate Key (email or phone):
+
+Definition: A minimal set of column(s) that uniquely identifies a row.
+In this table, both email and phone are candidate keys because each one, on its own, is unique and minimal.
+
+Super Key (student_id, phone):
+
+Definition: Any set of one or more columns that uniquely identifies a row.
+Although student_id alone is enough, the combination (student_id, phone) is also a super key because it still uniquely identifies a row.
+Note: This combination is not minimal (because phone is extra), so it is not a candidate key.
+
+Composite Key:
+
+Definition: A key that consists of two or more columns.
+The combination (student_id, phone) is a composite key because it involves more than one column. However, in this case, it’s only an example of a composite super key, not a 
+composite candidate key, since student_id alone is sufficient.
+
+Example 
+
+CREATE TABLE Enrollment (
+    student_id INT NOT NULL,
+    course_id INT NOT NULL,
+    enrollment_date DATE,
+	course_name varchar(100),
+	
+
+	
+    CONSTRAINT pk_enrollment PRIMARY KEY (student_id, course_id)
+);
+
+
+    CONSTRAINT pk_enrollment PRIMARY KEY (student_id)  
+    CONSTRAINT pk_enrollment PRIMARY KEY (student_id, course_id)
+    CONSTRAINT pk_enrollment PRIMARY KEY (student_id, course_id, course_name)
+
+1. Natural Key
+A natural key is a real-world, meaningful piece of data (or combination of columns) that already uniquely identifies a record.
+
+Examples:
+
+A Social Security Number (SSN) in the U.S. (if each person has a unique SSN).
+An email address if each user must have a unique email.
+A product serial number that is truly unique for each product.
+
+2. Surrogate Key
+A surrogate key is a synthetic or artificial key added to a table just to uniquely identify each row. It typically has no meaning in the real world; it’s there only for the database’s sake.
+
+Examples:
+
+An auto-increment integer column like id.
+A UUID (a universally unique identifier) column.
+Any system-generated unique value.
+
+
+
+Summary 
+Natural Key: Real data with business meaning, used as an identifier.
+Surrogate Key: Artificial (often numeric) identifier, stable and system-generated.
+
+Example 
+
+CREATE TABLE dim_customer (
+    customer_key INT AUTO_INCREMENT ,         -- Surrogate Key (unique for each version of the customer record)
+    aadhar_number INT NOT NULL PRIMARY KEY,   -- Natural Key (unique identifier for the customer)
+    customer_name VARCHAR(100),
+    city VARCHAR(100),
+    effective_date DATE,              -- Date this record version became active
+    end_date DATE,                    -- Date this record version ended
+    is_current BOOLEAN                -- Flag to indicate the current active record
+);
+
+Minimal
+---------
+In this context, minimal means that the set of columns (attributes) chosen to uniquely identify a row contains no unnecessary parts—if you remove any column from that set, 
+it would no longer uniquely identify the row.
+
+Breaking It Down with an Example
+Imagine a table with columns A, B, and C where:
+
+The combination (A, B, C) uniquely identifies each row.
+However, if it turns out that (A, B) alone is enough to uniquely identify each row, then (A, B, C) is not minimal because C is extra.
+Thus, the minimal key here is (A, B) since you cannot remove A or B without losing the ability to uniquely identify the row. This minimal set is what we call a candidate key.
+
+One-Line Definition Recap
+Minimal (in this context): A set of columns that is just sufficient to uniquely identify a row—removing any column would break this uniqueness.
