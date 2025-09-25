@@ -52,6 +52,10 @@ INSERT INTO CustomerTransactions VALUES
 
 select * from CustomerTransactions
 
+-- WHERE CLAUSE
+SELECT * FROM practice.employees WHERE department = 'IT';
+SELECT * FROM practice.employees WHERE department = 'IT' AND salary > 45000;
+
 select count(*) from CustomerTransactions where transaction_status not in('Failed','Pending')
 
 -- SUM, AVG, MIN, MAX
