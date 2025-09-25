@@ -1,0 +1,90 @@
+WHERE CLAUSE
+
+Comparison: =, !=, >, <, >=, <=
+Logical: AND, OR, NOT
+Pattern: LIKE '%pattern%', LIKE 'pattern_'
+Range: BETWEEN min AND max
+List: IN (value1, value2, value3)
+NULL: IS NULL, IS NOT NULL
+Grouping: Use parentheses () for complex conditions
+
+ WHERE Clause Best Practices
+
+Index Columns: Create indexes for the columns used in the WHERE clause.
+Most Selective First: Place the most selective condition first in the WHERE clause.
+Avoid Functions: Don’t apply functions directly on columns in the WHERE clause.
+Use LIMIT: For large result sets, use LIMIT to fetch only what you need.
+Test Conditions: Test complex conditions on smaller data before running on large datasets.
+
+❌ Common Mistakes to Avoid
+
+NULL: Use IS NULL, not = NULL
+Strings: Use quotes → 'Raj'
+Case: MySQL usually case-insensitive, but check collation
+Date: Use format 'YYYY-MM-DD'
+
+-- aggregation function , group by , having , alaises 
+
+CREATE TABLE CustomerTransactions (
+    id INT PRIMARY KEY,
+    login_device VARCHAR(50),
+    customer_name VARCHAR(100),
+    ip_address VARCHAR(20),
+    product VARCHAR(100),
+    amount DECIMAL(10, 2),
+    is_placed BOOLEAN,
+    is_viewed BOOLEAN,
+    transaction_status VARCHAR(20)
+);
+
+INSERT INTO CustomerTransactions VALUES
+(1, 'Mobile', 'Ravi', '192.168.1.1', 'Laptop', 50000.00, TRUE, FALSE, 'Completed'),
+(2, 'Desktop', 'Priya', '192.168.1.2', 'Smartphone', 20000.00, TRUE, TRUE, 'Completed'),
+(3, 'Tablet', 'Arjun', '192.168.1.3', 'Headphones', 1500.00, FALSE, TRUE, 'Failed'),
+(4, 'Mobile', 'Meena', '192.168.1.4', 'Shoes', 2500.00, TRUE, FALSE, 'Completed'),
+(5, 'Desktop', 'Karthik', '192.168.1.5', 'Watch', 5000.00, TRUE, TRUE, 'Completed'),
+(6, 'Mobile', 'Sowmya', '192.168.1.6', 'Tablet', 15000.00, TRUE, TRUE, 'Completed'),
+(7, 'Tablet', 'Ramesh', '192.168.1.7', 'Smartphone', 25000.00, FALSE, TRUE, 'Failed'),
+(8, 'Desktop', 'Divya', '192.168.1.8', 'Laptop', 60000.00, TRUE, FALSE, 'Completed'),
+(9, 'Mobile', 'Arun', '192.168.1.9', 'Smartwatch', 12000.00, TRUE, TRUE, 'Completed'),
+(10, 'Tablet', 'Deepa', '192.168.1.10', 'Laptop', 55000.00, FALSE, FALSE, 'Pending');
+
+
+select * from CustomerTransactions
+
+select count(*) from CustomerTransactions where transaction_status not in('Failed','Pending')
+
+-- SUM, AVG, MIN, MAX
+SELECT 
+    SUM(salary) AS total_amount, 
+    ROUND(AVG(salary), 2) AS rounded_average_amount,
+    MIN(salary) AS lowest_amount, 
+    MAX(salary) AS highest_amount 
+    FROM 
+CustomerTransactions;
+
+-- Comparison, Logical, Range, IN Operation
+SELECT 
+    name, 
+    department, 
+    salary, 
+    city 
+FROM employees 
+WHERE (department = 'IT' AND salary >= 45000) OR 
+(city IN ('Chennai', 'Mumbai') AND salary BETWEEN 40000 AND 47000); 
+
+Group By 
+-------
+select login_device, 
+SUM(amount) AS total_revenue
+from CustomerTransactions
+group by login_device;
+
+Having
+------
+select login_device, 
+SUM(amount) AS total_revenue
+from CustomerTransactions
+group by login_device
+HAVING 
+sum(amount) > 80000;
