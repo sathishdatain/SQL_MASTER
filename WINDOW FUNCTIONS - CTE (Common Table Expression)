@@ -1,0 +1,117 @@
+WINDOW FUNCTIONS — (a.k.a. Analytical Functions)
+-----------------------------------------------------------------------------------------------------------------------------------------
+🎯 Definition:
+Window functions perform calculations across a set of table rows that are related to the current row, without collapsing rows like GROUP BY.
+They are great for ranking, running totals, averages, comparisons, and trend analysis.
+
+🧮 Common Window Functions
+| Function       | Purpose                                                 |
+| -------------- | ------------------------------------------------------- |
+| `ROW_NUMBER()` | Assigns a unique sequential number to rows              |
+| `RANK()`       | Ranks rows with same value having same rank (with gaps) |
+| `DENSE_RANK()` | Ranks rows without gaps                                 |
+| `LAG()`        | Gets previous row’s value                               |
+| `LEAD()`       | Gets next row’s value                                   |
+| `SUM() OVER()` | Running total                                           |
+| `AVG() OVER()` | Running average                                         |
+
+📋 Example Table
+CREATE TABLE sales (
+    sale_id INT,
+    emp_name VARCHAR(50),
+    sale_date DATE,
+    total_amount DECIMAL(10,2)
+);
+
+INSERT INTO sales VALUES
+(1, 'Arun', '2025-01-01', 1000),
+(2, 'Arun', '2025-02-01', 2000),
+(3, 'Arun', '2025-03-01', 1500),
+(4, 'Priya', '2025-01-01', 1200),
+(5, 'Priya', '2025-02-01', 1800);
+
+⚙️ Example 1: Running Total
+SELECT 
+    emp_name,
+    sale_date,
+    total_amount,
+    SUM(total_amount) OVER (PARTITION BY emp_name ORDER BY sale_date) AS running_total
+FROM sales;
+
+Output:
+| emp_name | sale_date  | total_amount | running_total |
+| -------- | ---------- | ------------ | ------------- |
+| Arun     | 2025-01-01 | 1000         | 1000          |
+| Arun     | 2025-02-01 | 2000         | 3000          |
+| Arun     | 2025-03-01 | 1500         | 4500          |
+| Priya    | 2025-01-01 | 1200         | 1200          |
+| Priya    | 2025-02-01 | 1800         | 3000          |
+
+⚙️ Example 2: Rank by Sales
+SELECT 
+    emp_name,
+    sale_date,
+    total_amount,
+    RANK() OVER (PARTITION BY emp_name ORDER BY total_amount DESC) AS rank_by_sales
+FROM sales;
+
+✅ Key Points
+Doesn’t group or collapse rows like GROUP BY
+Works “over a window” (range of rows defined by OVER() clause)
+Perfect for dashboards, comparisons, and analytics
+
+
+🧩 CTE (Common Table Expression)
+-----------------------------------------------------------------------------------------------------------------------------------
+🎯 Definition:
+A CTE is a temporary named result set you can reference within a SQL query.
+It improves readability, reusability, and helps break complex queries into simpler parts.
+
+📘 Basic Syntax
+WITH cte_name AS (
+    SELECT columns
+    FROM table
+    WHERE condition
+)
+SELECT * FROM cte_name;
+
+🧮 Example 1: Average Sales Filter
+WITH avg_sales AS (
+    SELECT emp_name, AVG(total_amount) AS avg_sale
+    FROM sales
+    GROUP BY emp_name
+)
+SELECT s.emp_name, s.total_amount, a.avg_sale
+FROM sales s
+JOIN avg_sales a ON s.emp_name = a.emp_name
+WHERE s.total_amount > a.avg_sale;
+
+🧮 Example 2: Recursive CTE (Hierarchy)
+WITH RECURSIVE emp_hierarchy AS (
+    SELECT emp_id, emp_name, manager_id
+    FROM employees
+    WHERE manager_id IS NULL  -- Top level
+
+    UNION ALL
+
+    SELECT e.emp_id, e.emp_name, e.manager_id
+    FROM employees e
+    INNER JOIN emp_hierarchy eh ON e.manager_id = eh.emp_id
+)
+SELECT * FROM emp_hierarchy;
+
+Window Function vs CTE
+| Feature     | Window Function                          | CTE                                          |
+| ----------- | ---------------------------------------- | -------------------------------------------- |
+| Purpose     | Perform calculations across related rows | Organize queries, reuse intermediate results |
+| Output Rows | Doesn’t reduce rows                      | May reduce or restructure data               |
+| Use Case    | Ranking, running totals, comparisons     | Step-by-step queries, recursive logic        |
+| Example     | `SUM() OVER (PARTITION BY ...)`          | `WITH sales_summary AS (...)`                |
+
+🚀 Real-Life Uses
+| Tool               | Use Case                                          |
+| ------------------ | ------------------------------------------------- |
+| Power BI / Tableau | Use Window functions for DAX-like calculations    |
+| Data Engineering   | Recursive CTE for hierarchy, dependency chains    |
+| SQL Analytics      | Combine CTE + Window for advanced KPIs and trends |
+
