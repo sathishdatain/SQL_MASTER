@@ -1,0 +1,42 @@
+
+
+mkdir sql_notebook
+cd sql_notebook
+
+python -m venv env
+
+env\scripts\activate
+
+pip install --upgrade pip
+
+pip install notebook
+
+pip install ipython-sql
+
+pip install prettytable==0.7.2
+
+pip install mysql-connector-python
+
+pip install numpy pandas matplotlib seaborn scipy scikit-learn jupyter
+
+jupyter notebook
+
+
+To access the server, open this file in a browser:
+        file:///C:/Users/sathi/AppData/Roaming/jupyter/runtime/jpserver-13340-open.html
+    Or copy and paste one of these URLs:
+        http://localhost:8888/tree?token=bdf74721ab5eaa9c7c6ff8b67dc6a78118548ee53f4413aa
+        http://127.0.0.1:8888/tree?token=bdf74721ab5eaa9c7c6ff8b67dc6a78118548ee53f4413aa
+
+
+%load_ext sql
+%sql mysql+mysqlconnector://root:root@localhost
+
+%%sql
+
+cd sql_notebook
+env\scripts\activate
+jupyter notebook
+
+
+
