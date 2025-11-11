@@ -1,0 +1,15 @@
+View → reusable virtual table
+Stored Procedure → stored SQL program (can take input/output)
+CTE → temporary readable query block
+Subquery → query inside another query
+Window Function → calculate over a row window (ranking, totals
+
+
+| Feature                             | VIEW                  | STORED PROCEDURE      | CTE                   | SUBQUERY               | WINDOW FUNCTION              |
+| ----------------------------------- | --------------------- | --------------------- | --------------------- | ---------------------- | ---------------------------- |
+| Definition                          | Virtual table         | Precompiled SQL block | Temporary named query | Query inside query     | Function over window of rows |
+| Stored in DB                        | ✅ Yes                 | ✅ Yes                 | ❌ No                  | ❌ No                   | ❌ No                         |
+| Lifetime                            | Permanent             | Permanent             | Only during query     | Only during query      | Only during query            |
+| Parameters                          | ❌                     | ✅                     | ❌                     | ❌                      | ❌                            |
+| Use Case                            | Reusable SELECT logic | Automation, data ops  | Simplify query        | Conditional data fetch | Ranking, totals              |
+| Supports DML (INSERT/UPDATE/DELETE) | Limited               | ✅                     | ❌                     | ❌                      | ❌                            |
